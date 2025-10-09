@@ -1,1 +1,275 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🍓 Клубничное настроение</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* === Сброс и базовые настройки === */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: linear-gradient(135deg, #fff5f7 0%, #ffeef2 100%);
+      color: #3a1c25;
+      min-height: 100vh;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* === Логотип и заголовок === */
+    .brand-header {
+      text-align: center;
+      margin: 24px 0 32px;
+      max-width: 600px;
+    }
+
+    .brand-header h1 {
+      font-size: 2.4rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #e74c3c, #ff6b8a);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .brand-header p {
+      font-size: 1.1rem;
+      color: #7a4a55;
+      margin-top: 8px;
+    }
+
+    /* === Контейнер === */
+    .container {
+      background: white;
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 8px 30px rgba(231, 76, 60, 0.12);
+      width: 100%;
+      max-width: 560px;
+      margin-bottom: 24px;
+    }
+
+    /* === Кнопки === */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 14px 28px;
+      font-size: 1.05rem;
+      font-weight: 600;
+      color: white;
+      background: linear-gradient(135deg, #e74c3c, #ff6b8a);
+      border: none;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+      margin: 12px 0;
+      min-width: 200px;
+    }
+
+    .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(231, 76, 60, 0.4);
+    }
+
+    .btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* === Загрузка файла === */
+    #image-upload {
+      display: none;
+    }
+
+    .upload-label {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #fdf2f5;
+      color: #e74c3c;
+      border-radius: 50px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.2s;
+      margin-top: 8px;
+    }
+
+    .upload-label:hover {
+      background: #fce5e9;
+    }
+
+    /* === Видео и изображения === */
+    #webcam, #uploaded-image {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 16px;
+      margin: 16px 0;
+      border: 2px solid #ffe0e6;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+
+    /* === Результат === */
+    #prediction {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #3a1c25;
+      text-align: center;
+      margin-top: 20px;
+      padding: 16px;
+      background: #fff9fa;
+      border-radius: 16px;
+      border-left: 4px solid #ff6b8a;
+      min-height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #prediction strong {
+      color: #e74c3c;
+    }
+
+    /* === Скрытие === */
+    .hidden {
+      display: none !important;
+    }
+
+    /* === Адаптивность === */
+    @media (max-width: 600px) {
+      .brand-header h1 {
+        font-size: 2rem;
+      }
+      .container {
+        padding: 20px;
+      }
+      .btn {
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="brand-header">
+    <h1>Клубничное настроение</h1>
+    <p>Определи сорт клубники за секунду 🍓</p>
+  </div>
+
+  <div class="container">
+    <div id="webcam-container">
+      <button id="start-webcam" class="btn">📸 Включить камеру</button>
+      <video id="webcam" autoplay playsinline muted class="hidden"></video>
+      <button id="capture" class="btn hidden">Сделать фото</button>
+    </div>
+
+    <div id="upload-container">
+      <p>Или загрузи фото:</p>
+      <label for="image-upload" class="upload-label">Выбрать файл</label>
+      <input type="file" id="image-upload" accept="image/*">
+    </div>
+
+    <div id="preview" class="hidden">
+      <img id="uploaded-image" src="" alt="Загруженное фото">
+    </div>
+
+    <div id="prediction">Загрузи фото или включи камеру</div>
+  </div>
+
+  <!-- TensorFlow.js и Teachable Machine -->
+  <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.6"></script>
+
+<script>
+  // ✅ УКАЖИТЕ ПУТЬ К ЛОКАЛЬНОЙ МОДЕЛИ
+  const MODEL_URL = "./model/";
+
+  let model = null;
+  let webcam = null;
+
+  async function initModel() {
+    try {
+      const modelURL = MODEL_URL + "model.json";
+      const metadataURL = MODEL_URL + "metadata.json";
+      model = await tmImage.load(modelURL, metadataURL);
+      document.getElementById('prediction').textContent = "Модель загружена! Готов к работе 🍓";
+    } catch (err) {
+      console.error("Ошибка загрузки модели:", err);
+      document.getElementById('prediction').innerHTML =
+        '<strong>❌ Ошибка загрузки модели</strong><br>Проверь, что папка "model" существует и содержит файлы model.json, weights.bin, metadata.json';
+    }
+  }
+
+  async function predict(image) {
+    if (!model) return;
+    const predictions = await model.predict(image);
+    showResult(predictions);
+  }
+
+  function showResult(predictions) {
+    let best = { className: "Неизвестно", probability: 0 };
+    for (let i = 0; i < predictions.length; i++) {
+      if (predictions[i].probability > best.probability) {
+        best = predictions[i];
+      }
+    }
+
+    const percent = Math.round(best.probability * 100);
+    const resultText = percent > 60
+      ? `Сорт: <strong>${best.className}</strong> (${percent}%)`
+      : `Не уверен... Возможно, <strong>${best.className}</strong> (${percent}%)`;
+
+    document.getElementById('prediction').innerHTML = resultText;
+  }
+
+  document.getElementById('image-upload').addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const img = document.getElementById('uploaded-image');
+    img.src = URL.createObjectURL(file);
+    document.getElementById('preview').classList.remove('hidden');
+
+    img.onload = () => predict(img);
+  });
+
+  document.getElementById('start-webcam').addEventListener('click', async () => {
+    const video = document.getElementById('webcam');
+    const captureBtn = document.getElementById('capture');
+
+    try {
+      webcam = new tmImage.Webcam(320, 240, true);
+      await webcam.setup();
+      await webcam.play();
+      video.srcObject = webcam.stream;
+      video.classList.remove('hidden');
+      captureBtn.classList.remove('hidden');
+    } catch (err) {
+      console.error("Ошибка доступа к камере:", err);
+      document.getElementById('prediction').innerHTML =
+        '<strong>❌ Не удалось получить доступ к камере</strong><br>Разрешите доступ в настройках браузера';
+    }
+  });
+
+  document.getElementById('capture').addEventListener('click', async () => {
+    if (!webcam?.canvas) return;
+    predict(webcam.canvas);
+  });
+
+  window.addEventListener('load', initModel);
+</script>
+</body>
+
+</html>
