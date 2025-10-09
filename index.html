@@ -35,32 +35,59 @@
 
   <!-- TensorFlow.js и Teachable Machine -->
   <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@4.16.0"></script>
-  <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.6"></script>
 
 <script>
-  // ✅ УКАЖИТЕ ПУТЬ К ЛОКАЛЬНОЙ МОДЕЛИ
-  const MODEL_URL = "./model";
+  // ✅ Путь к вашей модели (должна быть папка model/ с model.json, weights.bin, metadata.json)
+  const MODEL_URL = './model/model.json';
+  const METADATA_URL = './model/metadata.json';
 
   let model = null;
-  let webcam = null;
+  let classNames = [];
 
+  // Загрузка модели и метаданных
   async function initModel() {
     try {
-      const modelURL = MODEL_URL + "model.json";
-      const metadataURL = MODEL_URL + "metadata.json";
-      model = await tmImage.load(modelURL, metadataURL);
+      // Загружаем модель
+      model = await tf.loadLayersModel(MODEL_URL);
+      
+      // Загружаем метки классов
+      const response = await fetch(METADATA_URL);
+      const metadata = await response.json();
+      classNames = metadata.labels || metadata.words || ["Класс 1", "Класс 2", "Класс 3"];
+      
       document.getElementById('prediction').textContent = "Модель загружена! Готов к работе 🍓";
     } catch (err) {
       console.error("Ошибка загрузки модели:", err);
       document.getElementById('prediction').innerHTML =
-        '<strong>❌ Ошибка загрузки модели</strong><br>Проверь, что папка "model" существует и содержит файлы model.json, weights.bin, metadata.json';
+        '<strong>❌ Ошибка загрузки модели</strong><br>Проверь файлы model.json и metadata.json';
     }
   }
 
-  async function predict(image) {
+  // Предсказание
+  async function predict(imageElement) {
     if (!model) return;
-    const predictions = await model.predict(image);
-    showResult(predictions);
+
+    // Подготовка изображения: 224x224, нормализация
+    const tensor = tf.browser.fromPixels(imageElement)
+      .resizeNearestNeighbor([224, 224])
+      .toFloat()
+      .div(255.0)
+      .expandDims();
+
+    // Предсказание
+    const predictions = await model.predict(tensor).data();
+    tensor.dispose();
+
+    // Преобразуем в массив вероятностей
+    const result = [];
+    for (let i = 0; i < classNames.length; i++) {
+      result.push({
+        className: classNames[i],
+        probability: predictions[i]
+      });
+    }
+
+    showResult(result);
   }
 
   function showResult(predictions) {
@@ -79,6 +106,7 @@
     document.getElementById('prediction').innerHTML = resultText;
   }
 
+  // === Загрузка изображения ===
   document.getElementById('image-upload').addEventListener('change', async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -90,15 +118,16 @@
     img.onload = () => predict(img);
   });
 
+  // === Камера: простая реализация без tmImage ===
+  let stream = null;
+
   document.getElementById('start-webcam').addEventListener('click', async () => {
     const video = document.getElementById('webcam');
     const captureBtn = document.getElementById('capture');
 
     try {
-      webcam = new tmImage.Webcam(320, 240, true);
-      await webcam.setup();
-      await webcam.play();
-      video.srcObject = webcam.stream;
+      stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
+      video.srcObject = stream;
       video.classList.remove('hidden');
       captureBtn.classList.remove('hidden');
     } catch (err) {
@@ -109,12 +138,26 @@
   });
 
   document.getElementById('capture').addEventListener('click', async () => {
-    if (!webcam?.canvas) return;
-    predict(webcam.canvas);
+    const video = document.getElementById('webcam');
+    if (!video.srcObject) return;
+
+    // Создаём canvas и копируем кадр
+    const canvas = document.createElement('canvas');
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    const ctx = canvas.getContext('2d');
+    ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+    predict(canvas);
   });
 
+  // Освобождение камеры при закрытии
+  window.addEventListener('beforeunload', () => {
+    if (stream) {
+      stream.getTracks().forEach(track => track.stop());
+    }
+  });
+
+  // Запуск
   window.addEventListener('load', initModel);
 </script>
-</body>
-
-</html>
