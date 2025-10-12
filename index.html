@@ -346,6 +346,8 @@
         <p>Приложение для распознавания сортов клубники с использованием Teachable Machine</p>
     </footer>
 
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
     <script>
         // Элементы DOM
         const uploadBtn = document.getElementById('uploadBtn');
@@ -369,9 +371,8 @@
         let model = null;
         let stream = null;
 
-        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
-    <script>
+        
+
         window.addEventListener('DOMContentLoaded', () => {
         if (typeof tmImage === 'undefined') {
             console.error('Teachable Machine библиотека не загружена!');
