@@ -346,8 +346,6 @@
         <p>Приложение для распознавания сортов клубники с использованием Teachable Machine</p>
     </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.9.0/dist/teachablemachine-image.min.js"></script>
     <script>
         // Элементы DOM
         const uploadBtn = document.getElementById('uploadBtn');
@@ -371,27 +369,34 @@
         let model = null;
         let stream = null;
 
-        // Загрузка модели Teachable Machine
+        <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8.3/dist/teachablemachine-image.min.js"></script>
+    <script>
+        window.addEventListener('DOMContentLoaded', () => {
+        if (typeof tmImage === 'undefined') {
+            console.error('Teachable Machine библиотека не загружена!');
+            alert('Не удалось загрузить библиотеку. Проверьте подключение скриптов.');
+            return;
+        }
+
         async function loadModel() {
-            // ИСПРАВЛЕННЫЕ ПУТИ:
             const modelURL = 'model/model.json';
             const metadataURL = 'model/metadata.json';
 
             try {
-                loader.style.display = 'block';
-                // ЗДЕСЬ БЫЛ ОШИБКА: tmImage.load(modelURL); находился вне try/catch.
-                // Переместите его внутрь блока try, чтобы поймать ошибку загрузки.
-                model = await tmImage.load(modelURL, metadataURL); // Можно указать metadataURL явно, хоть он и не всегда нужен.
-
-                console.log('Модель загружена успешно');
-                loader.style.display = 'none';
-
+                document.getElementById('loader').style.display = 'block';
+                window.model = await tmImage.load(modelURL, metadataURL);
+                console.log('✅ Модель загружена успешно');
+                document.getElementById('loader').style.display = 'none';
             } catch (error) {
-                console.error('Ошибка загрузки модели:', error);
+                console.error('❌ Ошибка загрузки модели:', error);
                 alert('Не удалось загрузить модель. Убедитесь, что файлы model.json и model.weights.bin доступны по пути "model/".');
-                loader.style.display = 'none';
+                document.getElementById('loader').style.display = 'none';
             }
         }
+
+        loadModel();
+    });
 
         // Инициализация при загрузке страницы
         window.addEventListener('DOMContentLoaded', () => {
