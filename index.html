@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Клубничное настроение - Выращивание садовой земляники</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/jpg" href="icon.jpg">
+</head>
+<body>
+    <!-- Уведомление о cookie -->
+    <div id="cookie-notification" class="cookie-notification">
+        <div class="cookie-content">
+            <p>Мы используем файлы cookie для улучшения работы сайта. Продолжая использовать сайт, вы соглашаетесь с этим.</p>
+            <button id="accept-cookie" class="cookie-btn">Принять</button>
+        </div>
+    </div>
+
+    <!-- Навигационное меню -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="index.html" class="logo">
+                <i class="fas fa-strawberry"></i>
+                <span>Клубничное настроение</span>
+            </a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item"><a href="#home" class="nav-link">Главная</a></li>
+                <li class="nav-item"><a href="#advantages" class="nav-link">Преимущества</a></li>
+                <li class="nav-item"><a href="#varieties" class="nav-link">Сорта</a></li>
+                <li class="nav-item"><a href="#about" class="nav-link">О компании</a></li>
+                <li class="nav-item"><a href="#contacts" class="nav-link">Контакты</a></li>
+                <li class="nav-item">
+                    <a href="clubnika_v2.0/opredelitel.html" class="nav-link determiner-btn">
+                        <i class="fas fa-search"></i> Определитель сорта
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Главный баннер -->
+    <section id="home" class="hero">
+        <div class="container hero-container">
+            <div class="hero-content fade-in">
+                <h1 class="hero-title">Клубничное настроение</h1>
+                <p class="hero-subtitle">Умное выращивание садовой земляники в Удмуртии</p>
+                <p class="hero-text">Свежая, экологически чистая ягода с подтверждённым происхождением.
+                Выращено с любовью и использованием современных агротехнологий.</p>
+                <a href="#varieties" class="btn-primary">Наши сорта</a>
+                <a href="#contacts" class="btn-secondary">Контакты</a>
+            </div>
+            <div class="hero-image fade-in delayed-1">
+                <img src="icon.jpg" alt="Садовая земляника">
+            </div>
+        </div>
+    </section>
+
+    <!-- Преимущества -->
+    <section id="advantages" class="advantages">
+        <div class="container">
+            <h2 class="section-title fade-in">Наши преимущества</h2>
+            <p class="section-subtitle fade-in delayed-1">Почему выбирают нашу продукцию</p>
+
+            <div class="advantages-grid">
+                <div class="advantage-card fade-in delayed-2">
+                    <div class="advantage-icon">
+                        <i class="fas fa-leaf"></i>
+                    </div>
+                    <h3>Экологичность</h3>
+                    <p>Мы используем современные агротехнологии (капельный полив, укрывной материал) без вредных химикатов. Вся продукция проходит проверку на безопасность.</p>
+                </div>
+
+                <div class="advantage-card fade-in delayed-3">
+                    <div class="advantage-icon">
+                        <i class="fas fa-seedling"></i>
+                    </div>
+                    <h3>Качественные сорта</h3>
+                    <p>Выращиваем современные, урожайные и устойчивые сорта: «Клери», «Даренка», «Мурано», «Мальвина», «Рубиновый кулон», «Флоренс» и другие.</p>
+                </div>
+
+                <div class="advantage-card fade-in delayed-4">
+                    <div class="advantage-icon">
+                        <i class="fas fa-award"></i>
+                    </div>
+                    <h3>Подтвержденное качество</h3>
+                    <p>Наличие декларации о соответствии в Испытательной лаборатории ФГБУ «Удмуртская МВЛ». Цифровая идентификация сортов через наше приложение.</p>
+                </div>
+
+                <div class="advantage-card fade-in delayed-5">
+                    <div class="advantage-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Прямые поставки</h3>
+                    <p>Прямая продажа с личного подворья снижает логистические издержки и обеспечивает максимальную свежесть ягод.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Сорта -->
+    <section id="varieties" class="varieties">
+        <div class="container">
+            <h2 class="section-title fade-in">Выращиваемые сорта</h2>
+            <p class="section-subtitle fade-in delayed-1">Элитные сорта садовой земляники</p>
+
+            <div class="varieties-grid">
+                <div class="variety-card fade-in delayed-2">
+                    <div class="variety-image">
+                        <img src="sorts/kleri.jpg" alt="Клубника Клери">
+                    </div>
+                    <div class="variety-content">
+                        <h3>Клери</h3>
+                        <p class="variety-desc">Ранний сорт, созревает в мае. Ягоды ярко-красные, конической формы, с насыщенным сладким вкусом.</p>
+                        <div class="variety-details">
+                            <span><i class="fas fa-calendar-alt"></i> Созревание: ранее</span>
+                            <span><i class="fas fa-weight"></i> Урожайность: высокая</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="variety-card fade-in delayed-3">
+                    <div class="variety-image">
+                        <img src="sorts/darenka.jpg" alt="Клубника Даренка">
+                    </div>
+                    <div class="variety-content">
+                        <h3>Даренка</h3>
+                        <p class="variety-desc">Универсальный сорт. Выдающаяся зимостойкость, неприхотливость, высокие стабильные урожаи.</p>
+                        <div class="variety-details">
+                            <span><i class="fas fa-calendar-alt"></i> Созревание: раннее</span>
+                            <span><i class="fas fa-snowflake"></i> Зимостойкость: высокая</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="variety-card fade-in delayed-4">
+                    <div class="variety-image">
+                        <img src="sorts/murano.jpg" alt="Клубника Мурано">
+                    </div>
+                    <div class="variety-content">
+                        <h3>Мурано</h3>
+                        <p class="variety-desc">Ремонтантный сорт, плодоносит с июня по сентябрь. Ягоды крупные, ароматные, отличного вкуса.</p>
+                        <div class="variety-details">
+                            <span><i class="fas fa-sync-alt"></i> Тип: ремонтантный</span>
+                            <span><i class="fas fa-calendar-alt"></i> Сезон: июнь-сентябрь</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="variety-card fade-in delayed-5">
+                    <div class="variety-image">
+                        <img src="sorts/malvina.jpg" alt="Клубника Мальвина">
+                    </div>
+                    <div class="variety-content">
+                        <h3>Мальвина</h3>
+                        <p class="variety-desc">Поздний сорт. Крупные, сладкие ягоды темно-красного цвета. Отличная транспортабельность и лежкость.</p>
+                        <div class="variety-details">
+                            <span><i class="fas fa-calendar-alt"></i> Созревание: позднее</span>
+                            <span><i class="fas fa-truck-loading"></i> Транспортабельность: отличная</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="variety-card fade-in delayed-6">
+                    <div class="variety-image">
+                        <img src="sorts/azia.png" alt="Клубника Азия">
+                    </div>
+                    <div class="variety-content">
+                        <h3>Азия</h3>
+                        <p class="variety-desc">Итальянский сорт раннего созревания. Ягоды очень крупные (до 35-40 г), конической формы, ярко-красные с глянцевым блеском.</p>
+                        <div class="variety-details">
+                            <span><i class="fas fa-calendar-alt"></i> Созревание: средне-ранее</span>
+                            <span><i class="fas fa-weight"></i> Транспортабельность: отличная</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="variety-card fade-in delayed-7">
+                    <div class="variety-image">
+                        <img src="sorts/florens.jpg" alt="Клубника Флоренс">
+                    </div>
+                    <div class="variety-content">
+                        <h3>Флоренс</h3>
+                        <p class="variety-desc">Поздний английский сорт. Крупные, правильной конической формы ягоды с плотной мякотью, отличным сладким вкусом и ярким ароматом.</p>
+                        <div class="variety-details">
+                            <span><i class="fas fa-calendar-alt"></i> Созревание: средне-позднее</span>
+                            <span><i class="fas fa-truck-loading"></i> Транспортабельность: отличная</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="variety-card fade-in delayed-8">
+                    <div class="variety-image">
+                        <img src="sorts/rubin_kulon.jpg" alt="Клубника Рубиновый кулон">
+                    </div>
+                    <div class="variety-content">
+                        <h3>Рубиновый кулон</h3>
+                        <p class="variety-desc">Универсальный сорт российской селекции. Ягоды темно-рубинового цвета, средней плотности, с насыщенным сладким вкусом и выраженным ароматом.</p>
+                        <div class="variety-details">
+                            <span><i class="fas fa-calendar-alt"></i> Созревание: среднее</span>
+                            <span><i class="fas fa-heart"></i> Устойчивость: высокая</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- О компании -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title fade-in">О компании</h2>
+
+            <div class="about-content">
+                <div class="about-text fade-in delayed-1">
+                    <p>Проект «Клубничное настроение» создан с целью выращивания качественной садовой земляники (клубники) на площади 1000 м² для получения стабильного дохода и обеспечения населения качественной местной продукцией.</p>
+
+                    <div class="stats-grid">
+                        <div class="stat">
+                            <span class="stat-number">1000</span>
+                            <span class="stat-label">м² площадь</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">1000</span>
+                            <span class="stat-label">кг урожай в год</span>
+                        </div>
+                        <div class="stat">
+                            <span class="stat-number">6+</span>
+                            <span class="stat-label">сортов</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="about-image fade-in delayed-2">
+                    <img src="sorts/oboi.jpeg" alt="Выращивание клубники">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты и данные -->
+    <section id="contacts" class="contacts">
+        <div class="container">
+            <h2 class="section-title fade-in">Контакты и реквизиты</h2>
+
+            <div class="contacts-content">
+                <div class="contact-info fade-in delayed-1">
+                    <div class="contact-card">
+                        <h3><i class="fas fa-user"></i> Владелец</h3>
+                        <p>Ананиев Егор Алексеевич</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <h3><i class="fas fa-map-marker-alt"></i> Адрес хозяйства</h3>
+                        <p>Удмуртская Республика, Малопургинский район, с. Ильинское, ул. Полевая, д. 13</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <h3><i class="fas fa-phone"></i> Контакты</h3>
+                        <p>Телефон: +7 (912) 017-86-50</p>
+                        <p>Email: egor7ananiev@mail.ru</p>
+                    </div>
+
+                    <div class="contact-card">
+                        <h3><i class="fas fa-file-contract"></i> Реквизиты</h3>
+                        <p> ИП: Ананиев Е.А.</p>
+                        <p> ОКВЭД: 01.13.21 - Выращивание плодовых и ягодных культур</p>
+                    </div>
+                </div>
+
+                <div class="map-container">
+                    <iframe
+                        src="https://yandex.ru/map-widget/v1/?um=constructor%3A58ec5045f764792c2fffaffd8f33b3f27c721b45d27e9bdecc47d8cdf901f401&amp;source=constructor"
+                        frameborder="0"
+                        allowfullscreen
+                        loading="lazy"
+                        title="Карта: расположение хозяйства 'Клубничное настроение'"
+                    ></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Футер -->
+    <footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-logo">
+                <i class="fas fa-strawberry"></i>
+                <span>Клубничное настроение</span>
+            </div>
+
+            <div class="footer-links">
+                <a href="#home">Главная</a>
+                <a href="#advantages">Преимущества</a>
+                <a href="#varieties">Сорта</a>
+                <a href="#contacts">Контакты</a>
+                <a href="clubnika_v2.0/opredelitel.html">Определитель сорта</a>
+            </div>
+
+            <div class="social-links">
+                <h3>Мы в соцсетях</h3>
+                <div class="social-icons">
+                    <a href="https://vk.com/berry_feel" class="social-icon" target="_blank" aria-label="VK">
+                        <i class="fab fa-vk"></i>
+                    </a>
+                    <a href="https://t.me/berry_feel" class="social-icon" target="_blank" aria-label="Telegram">
+                        <i class="fab fa-telegram"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="footer-copyright">
+                <p>&copy; 2025 Клубничное настроение. Все права защищены.</p>
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script>
+                // Анимация появления элементов при прокрутке
+        document.addEventListener('DOMContentLoaded', function() {
+            // Элементы для анимации
+            const fadeElements = document.querySelectorAll('.fade-in');
+
+            // Функция проверки видимости элемента
+            function checkVisibility() {
+                fadeElements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        element.classList.add('visible');
+                    }
+                });
+            }
+
+            // Проверяем при загрузке и прокрутке
+            window.addEventListener('scroll', checkVisibility);
+            checkVisibility(); // Проверяем сразу при загрузке
+
+            // Мобильное меню
+            const mobileMenu = document.getElementById('mobile-menu');
+            const navMenu = document.querySelector('.nav-menu');
+
+            if (mobileMenu) {
+                mobileMenu.addEventListener('click', function() {
+                    mobileMenu.classList.toggle('active');
+                    navMenu.classList.toggle('active');
+                });
+            }
+
+            // Закрытие мобильного меню при клике на ссылку
+            const navLinks = document.querySelectorAll('.nav-link');
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    navMenu.classList.remove('active');
+                });
+            });
+
+            // Обработка cookie уведомления
+            const cookieNotification = document.getElementById('cookie-notification');
+            const acceptCookieBtn = document.getElementById('accept-cookie');
+
+            // Проверяем, принял ли пользователь cookie ранее
+            const cookiesAccepted = localStorage.getItem('cookiesAccepted');
+
+            if (!cookiesAccepted) {
+                // Показываем уведомление с задержкой
+                setTimeout(() => {
+                    cookieNotification.classList.add('show');
+                }, 1000);
+            }
+
+            // Обработка принятия cookie
+            if (acceptCookieBtn) {
+                acceptCookieBtn.addEventListener('click', function() {
+                    // Сохраняем в localStorage, что пользователь принял cookie
+                    localStorage.setItem('cookiesAccepted', 'true');
+                    // Скрываем уведомление
+                    cookieNotification.classList.remove('show');
+                });
+            }
+
+            // Плавный скролл для якорных ссылок
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+
+            // Добавляем активный класс к текущему разделу в навигации
+            function highlightNavOnScroll() {
+                const sections = document.querySelectorAll('section[id]');
+                const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop - 100;
+                    const sectionHeight = section.offsetHeight;
+                    const sectionId = section.getAttribute('id');
+
+                    if (scrollPos >= sectionTop && scrollPos < sectionTop + sectionHeight) {
+                        document.querySelectorAll('.nav-link').forEach(link => {
+                            link.classList.remove('active');
+                            if (link.getAttribute('href') === `#${sectionId}`) {
+                                link.classList.add('active');
+                            }
+                        });
+                    }
+                });
+            }
+
+            window.addEventListener('scroll', highlightNavOnScroll);
+        });
+    </script>
+</body>
+</html>

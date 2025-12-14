@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Определитель сортов и зрелости — Клубничное настроение</title>
+    <link rel="stylesheet" href="opredelitel.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="icon.png">
+</head>
+<body>
+    <!-- Навигация (как на основном сайте) -->
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="../index.html" class="logo">
+                <i class="fas fa-strawberry"></i>
+                <span>Клубничное настроение</span>
+            </a>
+            <a href="../index.html#contacts" class="btn-secondary nav-back">← Назад</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="container">
+            <header class="section-header fade-in">
+                <h1 class="section-title">Определитель сортов и зрелости</h1>
+                <p class="section-subtitle">
+                    Загрузите фото клубники или сделайте снимок, чтобы определить сорт, зрелость или признаки болезней
+                </p>
+            </header>
+
+            <!-- Режимы -->
+            <div class="mode-section fade-in delayed-1">
+                <h2 class="section-subtitle-small">Выберите режим анализа</h2>
+                <div class="mode-buttons">
+                    <button id="modeSort" class="mode-btn active" aria-label="Определить сорт">
+                        <i class="fas fa-seedling"></i> Сорт
+                    </button>
+                    <button id="modeRipeness" class="mode-btn" aria-label="Определить зрелость">
+                        <i class="fas fa-clipboard-check"></i> Зрелость
+                    </button>
+                    <button id="modeDisease" class="mode-btn" aria-label="Определить болезнь">
+                        <i class="fas fa-virus"></i> Болезнь
+                    </button>
+                </div>
+            </div>
+
+            <!-- Загрузка -->
+            <div class="upload-section fade-in delayed-2">
+                <div class="upload-actions">
+                    <button id="uploadBtn" class="btn-primary">
+                        <i class="fas fa-upload"></i> Загрузить фото
+                    </button>
+                    <button id="cameraBtn" class="btn-secondary">
+                        <i class="fas fa-camera"></i> Снять сейчас
+                    </button>
+                    <button id="retakeBtn" class="btn-secondary" style="display: none;">
+                        <i class="fas fa-redo"></i> Переснять
+                    </button>
+                    <button id="analyzeBtn" class="btn-primary" disabled>
+                        <i class="fas fa-search"></i> <span id="analyzeText">Определить</span>
+                    </button>
+                </div>
+
+                <div class="preview-container">
+                    <div class="preview-placeholder">
+                        <i class="fas fa-strawberry fa-3x"></i>
+                        <p>Загрузите фото клубники или сделайте снимок</p>
+                    </div>
+                    <img id="previewImage" src="" alt="Предпросмотр изображения" style="display: none;">
+                    <video id="cameraStream" autoplay playsinline muted style="display: none;"></video>
+                </div>
+
+                <div class="camera-container" id="cameraContainer" style="display: none;">
+                    <div class="camera-view">
+                        <video id="cameraView" autoplay playsinline muted style="display: none;"></video>
+                        <video id="cameraPreview" autoplay playsinline muted style="display: block; width: 100%; height: 100%; object-fit: cover;"></video>
+                    </div>
+                    <button id="captureBtn" class="btn-primary">
+                        <i class="fas fa-camera"></i> Сделать снимок
+                    </button>
+                </div>
+            </div>
+
+            <!-- Результаты сортов -->
+            <div class="result-section" id="resultSection" style="display: none;">
+                <h2 class="section-title">Результат распознавания сорта</h2>
+                <div class="result-grid">
+                    <div class="result-image-box">
+                        <img id="resultImage" src="" alt="Распознанное изображение">
+                    </div>
+                    <div class="result-details">
+                        <div class="prediction" id="predictionResults"></div>
+                        <div class="strawberry-info" id="strawberryInfoSection">
+                            <h3 class="info-title">О сорте</h3>
+                            <p class="info-text" id="infoText">Информация появится после определения сорта</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Результаты зрелости -->
+            <div class="result-section" id="ripenessResultSection" style="display: none;">
+                <h2 class="section-title">Анализ зрелости ягод</h2>
+                <div class="result-grid">
+                    <div class="result-image-box">
+                        <img id="ripenessResultImage" src="" alt="Анализ зрелости">
+                    </div>
+                    <div class="result-details">
+                        <div class="prediction" id="ripenessPredictionResults"></div>
+                        <div class="strawberry-info" id="ripenessInfoSection">
+                            <h3 class="info-title">Статистика зрелости</h3>
+                            <div class="info-text" id="ripenessStats"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Результаты болезней -->
+            <div class="result-section" id="diseaseResultSection" style="display: none;">
+                <h2 class="section-title">Диагностика болезней</h2>
+                <div class="result-grid">
+                    <div class="result-image-box">
+                        <img id="diseaseResultImage" src="" alt="Анализ болезни">
+                    </div>
+                    <div class="result-details">
+                        <div class="prediction" id="diseasePredictionResults"></div>
+                        <div class="strawberry-info" id="diseaseInfoSection">
+                            <h3 class="info-title">Рекомендации</h3>
+                            <p class="info-text" id="diseaseTreatment">Информация появится после анализа</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loader -->
+            <div class="loader" id="loader" style="display: none;">
+                <div class="loader-spinner"></div>
+                <p style="margin-top: 20px; color: var(--primary-color);">Анализируем изображение...</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер (как на основном сайте) -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-logo">
+                    <i class="fas fa-strawberry"></i>
+                    <span>Клубничное настроение</span>
+                </div>
+                <div class="footer-links">
+                    <a href="../index.html">Главная</a>
+                    <a href="../index.html#advantages">Преимущества</a>
+                    <a href="../index.html#varieties">Сорта</a>
+                    <a href="../index.html#contacts">Контакты</a>
+                </div>
+                <div class="footer-copyright">
+                    <p>&copy; 2025 Клубничное настроение. Все права защищены.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Модальное окно смены режима -->
+    <div id="modeSwitchModal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Смена режима анализа</h3>
+            <p>Вы уже загрузили фото. Что вы хотите сделать?</p>
+            <div class="modal-buttons">
+                <button id="useCurrentPhoto" class="btn-primary">Использовать текущее фото</button>
+                <button id="retakePhoto" class="btn-secondary">Переснять/Загрузить новое</button>
+                <button id="cancelSwitch" class="btn-secondary" style="margin-top: 10px;">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подключение TensorFlow и Teachable Machine -->
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@0.8/dist/teachablemachine-image.min.js"></script>
+
+    <script>
+        // Элементы DOM
+        const uploadBtn = document.getElementById('uploadBtn');
+        const cameraBtn = document.getElementById('cameraBtn');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const analyzeText = document.getElementById('analyzeText');
+        const captureBtn = document.getElementById('captureBtn');
+        const retakeBtn = document.getElementById('retakeBtn');
+        const previewPlaceholder = document.querySelector('.preview-placeholder');
+        const previewImage = document.getElementById('previewImage');
+        const cameraView = document.getElementById('cameraView');
+        const cameraPreview = document.getElementById('cameraPreview');
+        const cameraContainer = document.getElementById('cameraContainer');
+        const cameraStream = document.getElementById('cameraStream');
+        const resultSection = document.getElementById('resultSection');
+        const resultImage = document.getElementById('resultImage');
+        const predictionResults = document.getElementById('predictionResults');
+        const infoText = document.getElementById('infoText');
+        const ripenessResultSection = document.getElementById('ripenessResultSection');
+        const ripenessResultImage = document.getElementById('ripenessResultImage');
+        const ripenessPredictionResults = document.getElementById('ripenessPredictionResults');
+        const ripenessStats = document.getElementById('ripenessStats');
+        const diseaseResultSection = document.getElementById('diseaseResultSection');
+        const diseaseResultImage = document.getElementById('diseaseResultImage');
+        const diseasePredictionResults = document.getElementById('diseasePredictionResults');
+        const diseaseTreatment = document.getElementById('diseaseTreatment');
+        const loader = document.getElementById('loader');
+
+        // Переменные для хранения состояния
+        let currentImage = null;
+        let model = null;
+        let modelRipeness = null;
+        let modelDisease = null;
+        let stream = null;
+        let strawberryData = {};
+        let diseaseData = {};
+        let currentMode = 'sort';
+        let previousMode = 'sort';
+
+        // Загрузка данных и моделей при загрузке страницы
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Загрузка данных о сортах
+            try {
+                const response = await fetch('strawberry_data.json');
+                if (!response.ok) throw new Error(`Ошибка загрузки данных: ${response.status}`);
+                strawberryData = await response.json();
+                console.log('✅ Данные о сортах загружены');
+            } catch (error) {
+                console.error('❌ Не удалось загрузить данные о сортах:', error);
+                strawberryData = {
+                    'Клери': {
+                        description: 'Ранний сорт итальянской селекции.',
+                        origin: 'Италия',
+                        maturity: 'Ранний',
+                        color_and_shape: 'Ярко-красные, блестящие ягоды конической формы',
+                        farming: 'Подходит для открытого грунта и теплиц'
+                    }
+                };
+            }
+
+            // Загрузка данных о болезнях
+            try {
+                const response = await fetch('disease_data.json');
+                if (!response.ok) throw new Error(`Ошибка загрузки данных о болезнях: ${response.status}`);
+                diseaseData = await response.json();
+                console.log('✅ Данные о болезнях загружены');
+            } catch (error) {
+                console.error('❌ Не удалось загрузить данные о болезнях:', error);
+                diseaseData = {
+                    'Бурая пятнистость': {
+                        description: 'Грибковое заболевание, проявляющееся бурыми пятнами на листьях.',
+                        treatment: 'Удаление пораженных листьев, обработка фунгицидами.'
+                    }
+                };
+            }
+
+            // Загрузка моделей
+            async function loadModels() {
+                loader.style.display = 'block';
+
+                try {
+                    // Модель сортов
+                    model = await tmImage.load('model/model.json', 'model/metadata.json');
+                    console.log('✅ Модель сортов загружена');
+
+                    // Модель зрелости
+                    modelRipeness = await tmImage.load('model_ripeness/model.json', 'model_ripeness/metadata.json');
+                    console.log('✅ Модель зрелости загружена');
+
+                    // Модель болезней
+                    modelDisease = await tmImage.load('model_disease/model.json', 'model_disease/metadata.json');
+                    console.log('✅ Модель болезней загружена');
+
+                } catch (error) {
+                    console.error('❌ Ошибка загрузки моделей:', error);
+                    alert('Не удалось загрузить модели. Убедитесь, что файлы моделей доступны.');
+                } finally {
+                    loader.style.display = 'none';
+                }
+            }
+
+            loadModels();
+
+            // Инициализация анимаций
+            setTimeout(() => {
+                document.querySelectorAll('.fade-in').forEach(el => {
+                    el.classList.add('visible');
+                });
+            }, 100);
+        });
+
+        // Модальное окно смены режима
+        function showModeSwitchModal() {
+            document.getElementById('modeSwitchModal').style.display = 'flex';
+        }
+
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('modeSwitchModal').style.display = 'none';
+        });
+
+        document.getElementById('cancelSwitch').addEventListener('click', () => {
+            document.getElementById('modeSwitchModal').style.display = 'none';
+            // Возвращаемся к предыдущему режиму
+            currentMode = previousMode;
+            updateModeButtons();
+        });
+
+        document.getElementById('useCurrentPhoto').addEventListener('click', () => {
+            document.getElementById('modeSwitchModal').style.display = 'none';
+            resetResultsExceptImage();
+            analyzeBtn.disabled = false;
+            analyzeBtn.click();
+        });
+
+        document.getElementById('retakePhoto').addEventListener('click', () => {
+            document.getElementById('modeSwitchModal').style.display = 'none';
+            resetAll();
+            cameraBtn.click();
+        });
+
+        // Переключение режимов
+        function updateModeButtons() {
+            document.querySelectorAll('.mode-btn').forEach(btn => {
+                btn.classList.remove('active');
+                btn.classList.add('btn-secondary');
+            });
+
+            const activeBtn = currentMode === 'sort' ? document.getElementById('modeSort') :
+                            currentMode === 'ripeness' ? document.getElementById('modeRipeness') :
+                            document.getElementById('modeDisease');
+
+            activeBtn.classList.add('active');
+            activeBtn.classList.remove('btn-secondary');
+
+            // Обновляем текст кнопки анализа
+            analyzeText.textContent = currentMode === 'sort' ? 'Определить сорт' :
+                                    currentMode === 'ripeness' ? 'Определить зрелость' :
+                                    'Определить болезнь';
+        }
+
+        document.getElementById('modeSort').addEventListener('click', function() {
+            if (currentImage && currentMode !== 'sort') {
+                previousMode = currentMode;
+                currentMode = 'sort';
+                showModeSwitchModal();
+            } else {
+                currentMode = 'sort';
+                updateModeButtons();
+                if (currentImage) analyzeBtn.disabled = false;
+                resetResultsExceptImage();
+            }
+        });
+
+        document.getElementById('modeRipeness').addEventListener('click', function() {
+            if (currentImage && currentMode !== 'ripeness') {
+                previousMode = currentMode;
+                currentMode = 'ripeness';
+                showModeSwitchModal();
+            } else {
+                currentMode = 'ripeness';
+                updateModeButtons();
+                if (currentImage) analyzeBtn.disabled = false;
+                resetResultsExceptImage();
+            }
+        });
+
+        document.getElementById('modeDisease').addEventListener('click', function() {
+            if (currentImage && currentMode !== 'disease') {
+                previousMode = currentMode;
+                currentMode = 'disease';
+                showModeSwitchModal();
+            } else {
+                currentMode = 'disease';
+                updateModeButtons();
+                if (currentImage) analyzeBtn.disabled = false;
+                resetResultsExceptImage();
+            }
+        });
+
+        // Загрузка изображения
+        uploadBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'image/*';
+            input.capture = 'environment';
+
+            input.addEventListener('change', (e) => {
+                const file = e.target.files[0];
+                if (file) {
+                    if (!file.type.match('image.*')) {
+                        alert('Пожалуйста, выберите файл изображения');
+                        return;
+                    }
+
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        previewPlaceholder.style.display = 'none';
+                        previewImage.src = event.target.result;
+                        previewImage.style.display = 'block';
+                        cameraContainer.style.display = 'none';
+                        currentImage = previewImage;
+                        analyzeBtn.disabled = false;
+                        retakeBtn.style.display = 'inline-flex';
+
+                        // Скрываем результаты предыдущего анализа
+                        resetResultsExceptImage();
+                    };
+                    reader.readAsDataURL(file);
+                }
+            });
+            input.click();
+        });
+
+        // Работа с камерой
+        cameraBtn.addEventListener('click', async () => {
+            resetAll();
+
+            try {
+                stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: 'environment',
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
+
+                cameraPreview.srcObject = stream;
+                previewPlaceholder.style.display = 'none';
+                cameraContainer.style.display = 'flex';
+                analyzeBtn.disabled = true;
+                retakeBtn.style.display = 'inline-flex';
+
+            } catch (error) {
+                console.error('Ошибка доступа к камере:', error);
+                let msg = 'Не удалось получить доступ к камере.\n\n';
+
+                if (error.name === 'NotAllowedError') {
+                    msg += 'Разрешите доступ к камере в настройках браузера.';
+                } else if (error.name === 'NotFoundError') {
+                    msg += 'Камера не найдена. Убедитесь, что камера подключена.';
+                } else if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+                    msg += 'Камера работает только на HTTPS или localhost.';
+                } else {
+                    msg += 'Проверьте подключение камеры и разрешения.';
+                }
+
+                alert(msg);
+                // Предлагаем загрузить фото вместо съемки
+                uploadBtn.click();
+            }
+        });
+
+        // Сделать снимок
+        captureBtn.addEventListener('click', () => {
+            if (!stream) {
+                alert('Камера не готова');
+                return;
+            }
+
+            const canvas = document.createElement('canvas');
+            const context = canvas.getContext('2d');
+            canvas.width = cameraPreview.videoWidth;
+            canvas.height = cameraPreview.videoHeight;
+            context.drawImage(cameraPreview, 0, 0, canvas.width, canvas.height);
+
+            previewImage.src = canvas.toDataURL('image/jpeg');
+            previewImage.style.display = 'block';
+            previewPlaceholder.style.display = 'none';
+            cameraContainer.style.display = 'none';
+
+            currentImage = previewImage;
+            analyzeBtn.disabled = false;
+
+            // Останавливаем поток камеры
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+        });
+
+        // Переснять
+        retakeBtn.addEventListener('click', () => {
+            resetAll();
+            cameraBtn.click();
+        });
+
+        // Анализ изображения
+        analyzeBtn.addEventListener('click', async () => {
+            if (!currentImage || !currentImage.src) {
+                alert('Пожалуйста, загрузите или сделайте фото');
+                return;
+            }
+
+            // Проверка загрузки моделей
+            if ((currentMode === 'sort' && !model) ||
+                (currentMode === 'ripeness' && !modelRipeness) ||
+                (currentMode === 'disease' && !modelDisease)) {
+                alert('Модели еще загружаются. Пожалуйста, подождите.');
+                return;
+            }
+
+            try {
+                loader.style.display = 'block';
+                let predictions;
+
+                if (currentMode === 'sort') {
+                    predictions = await model.predict(currentImage);
+                    displayResults(predictions);
+                    resultSection.style.display = 'block';
+                    ripenessResultSection.style.display = 'none';
+                    diseaseResultSection.style.display = 'none';
+                } else if (currentMode === 'ripeness') {
+                    predictions = await modelRipeness.predict(currentImage);
+                    displayRipenessResults(predictions);
+                    resultSection.style.display = 'none';
+                    ripenessResultSection.style.display = 'block';
+                    diseaseResultSection.style.display = 'none';
+                } else if (currentMode === 'disease') {
+                    predictions = await modelDisease.predict(currentImage);
+                    displayDiseaseResults(predictions);
+                    resultSection.style.display = 'none';
+                    ripenessResultSection.style.display = 'none';
+                    diseaseResultSection.style.display = 'block';
+                }
+
+                loader.style.display = 'none';
+
+                // Прокрутка к результатам
+                const targetSection = currentMode === 'sort' ? resultSection :
+                                    currentMode === 'ripeness' ? ripenessResultSection :
+                                    diseaseResultSection;
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+            } catch (error) {
+                console.error('Ошибка при распознавании:', error);
+                alert('Произошла ошибка при анализе изображения. Попробуйте еще раз.');
+                loader.style.display = 'none';
+            }
+        });
+
+        // Отображение результатов сортов
+        function displayResults(predictions) {
+            predictionResults.innerHTML = '';
+            predictions.sort((a, b) => b.probability - a.probability);
+            const topPredictions = predictions.slice(0, 3);
+
+            topPredictions.forEach(prediction => {
+                const predictionItem = document.createElement('div');
+                predictionItem.className = 'prediction-item';
+                predictionItem.innerHTML = `
+                    <div class="prediction-name">${prediction.className}</div>
+                    <div class="prediction-confidence">${(prediction.probability * 100).toFixed(1)}%</div>
+                `;
+                predictionResults.appendChild(predictionItem);
+            });
+
+            resultImage.src = currentImage.src;
+            const topPrediction = topPredictions[0];
+            displayStrawberryInfo(topPrediction.className);
+        }
+
+        // Отображение результатов зрелости
+        function displayRipenessResults(predictions) {
+            ripenessPredictionResults.innerHTML = '';
+            predictions.sort((a, b) => b.probability - a.probability);
+
+            predictions.forEach(prediction => {
+                const predictionItem = document.createElement('div');
+                predictionItem.className = 'prediction-item';
+                predictionItem.innerHTML = `
+                    <div class="prediction-name">${prediction.className}</div>
+                    <div class="prediction-confidence">${(prediction.probability * 100).toFixed(1)}%</div>
+                `;
+                ripenessPredictionResults.appendChild(predictionItem);
+            });
+
+            ripenessResultImage.src = currentImage.src;
+
+            // Расчет статистики
+            let ripePercent = 0;
+            let unripePercent = 0;
+
+            predictions.forEach(pred => {
+                if (pred.className.toLowerCase().includes('спел') || pred.className === 'Спелые') {
+                    ripePercent = pred.probability * 100;
+                } else if (pred.className.toLowerCase().includes('неспел') || pred.className === 'Не спелые') {
+                    unripePercent = pred.probability * 100;
+                }
+            });
+
+            ripenessStats.innerHTML = `
+                <div style="margin-bottom: 10px;">
+                    <strong>Спелые:</strong> ${ripePercent.toFixed(1)}%
+                </div>
+                <div>
+                    <strong>Неспелые:</strong> ${unripePercent.toFixed(1)}%
+                </div>
+            `;
+        }
+
+        // Отображение результатов болезней
+        function displayDiseaseResults(predictions) {
+            diseasePredictionResults.innerHTML = '';
+            predictions.sort((a, b) => b.probability - a.probability);
+
+            predictions.forEach(prediction => {
+                const predictionItem = document.createElement('div');
+                predictionItem.className = 'prediction-item';
+                predictionItem.innerHTML = `
+                    <div class="prediction-name">${prediction.className}</div>
+                    <div class="prediction-confidence">${(prediction.probability * 100).toFixed(1)}%</div>
+                `;
+                diseasePredictionResults.appendChild(predictionItem);
+            });
+
+            diseaseResultImage.src = currentImage.src;
+
+            const topPrediction = predictions[0];
+            displayDiseaseInfo(topPrediction.className);
+        }
+
+        // Информация о болезнях
+        function displayDiseaseInfo(diseaseName) {
+            const data = diseaseData[diseaseName];
+            if (data) {
+                diseaseTreatment.innerHTML = `
+                    <strong>Описание:</strong> ${data.description}<br><br>
+                    <strong>Методы борьбы:</strong> ${data.treatment}
+                `;
+            } else {
+                diseaseTreatment.textContent = 'Информация о данной болезни временно отсутствует в нашей базе данных.';
+            }
+        }
+
+        // Информация о сортах
+        function displayStrawberryInfo(strawberryType) {
+            const data = strawberryData[strawberryType];
+            if (data) {
+                infoText.innerHTML = `
+                    <strong>Описание:</strong> ${data.description || 'Нет информации'}<br><br>
+                    <strong>Происхождение:</strong> ${data.origin || 'Нет информации'}<br><br>
+                    <strong>Срок созревания:</strong> ${data.maturity || 'Нет информации'}<br><br>
+                    <strong>Цвет и форма:</strong> ${data.color_and_shape || 'Нет информации'}<br><br>
+                    <strong>Выращивание:</strong> ${data.farming || 'Нет информации'}
+                `;
+            } else {
+                infoText.textContent = 'Информация о данном сорте клубники временно отсутствует в нашей базе данных.';
+            }
+        }
+
+        // Сброс всего
+        function resetAll() {
+            // Останавливаем камеру
+            if (stream) {
+                stream.getTracks().forEach(track => track.stop());
+                stream = null;
+            }
+
+            // Сбрасываем интерфейс
+            previewPlaceholder.style.display = 'flex';
+            previewImage.style.display = 'none';
+            previewImage.src = '';
+            cameraContainer.style.display = 'none';
+            cameraPreview.srcObject = null;
+
+            // Сбрасываем результаты
+            resetResultsExceptImage();
+            currentImage = null;
+            analyzeBtn.disabled = true;
+            retakeBtn.style.display = 'none';
+        }
+
+        // Сброс результатов, но не изображения
+        function resetResultsExceptImage() {
+            resultSection.style.display = 'none';
+            ripenessResultSection.style.display = 'none';
+            diseaseResultSection.style.display = 'none';
+
+            predictionResults.innerHTML = '';
+            ripenessPredictionResults.innerHTML = '';
+            diseasePredictionResults.innerHTML = '';
+
+            infoText.textContent = 'Информация появится после определения сорта';
+            ripenessStats.innerHTML = '';
+            diseaseTreatment.textContent = 'Информация появится после анализа';
+
+            resultImage.src = '';
+            ripenessResultImage.src = '';
+            diseaseResultImage.src = '';
+        }
+    </script>
+</body>
+</html>
